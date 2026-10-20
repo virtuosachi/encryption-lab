@@ -1,0 +1,4 @@
+# Files that should NOT be copied into the hosted app
+storage/
+.git/
+.DS_Store

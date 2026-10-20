@@ -181,7 +181,7 @@ lesson_intro(
 <?php step_start(5, 'The key manager: replacing a key', 'keys',
     'Organisations change ("rotate") their keys regularly. Let\'s see what that means for old data.'); ?>
     <?php row('Current lesson key', hex($currentKey)); ?>
-    <?php row('Saved in the file', 'storage/keys/lesson01.key'); ?>
+    <?php row('Saved in the file', storage_path('keys/lesson01.key')); ?>
     <?php todo([
         'Encrypt a message in step 2 and copy the result.',
         'Press <b>Replace the key</b> below.',

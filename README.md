@@ -54,7 +54,61 @@ This runs every demo from every lesson and prints PASS/FAIL. It's the fastest wa
 
 ---
 
-## 3. What's inside
+## 3. Put it online for free (Render)
+
+You can host the lab for free on [Render](https://render.com) so students only need a link.
+The project already includes everything Render needs: `Dockerfile` (runs the lab with the
+Apache web server, so a whole class can use it at once) and `render.yaml` (the settings).
+
+**What "free" means on Render:** no charges and no monthly credit to run out. The trade-offs:
+- After **15 minutes with no visitors**, the app goes to sleep. The next visit wakes it up in about **1 minute**.
+  **Tip:** open the link yourself a couple of minutes before class.
+- Saved data (keys, "cloud" files, database rows) is **wiped** whenever the app sleeps or restarts.
+  That's fine here: every student starts with a fresh lab anyway.
+- 750 free hours per month: enough to keep one app running all month.
+
+### Step A — Put the project on GitHub (one time)
+
+Render deploys straight from a GitHub repository.
+
+1. Create a free account at <https://github.com> and click **New repository**. Name it `encryption-lab`.
+   It can be Public or Private.
+2. Upload the project, using **either** option:
+   - **Easiest (no commands):** on the new repo page, click **uploading an existing file**, then drag in
+     **everything inside** the `encryption-demo` folder (`public`, `src`, `lib`, `cli`, `Dockerfile`, `render.yaml`,
+     `README.md`, `start.sh`). Don't upload the `storage` folder. Click **Commit changes**.
+   - **With git in a terminal**, inside the `encryption-demo` folder:
+     ```bash
+     git init
+     git add .
+     git commit -m "Encryption Lab"
+     git branch -M main
+     git remote add origin https://github.com/YOUR-USERNAME/encryption-lab.git
+     git push -u origin main
+     ```
+
+### Step B — Deploy on Render
+
+1. Sign up at <https://render.com> with your GitHub account (free).
+2. Click **New** → **Blueprint**, choose your `encryption-lab` repository, and click **Apply**.
+   Render reads `render.yaml` and creates a **free** web service called `encryption-lab`.
+   (Alternative: **New** → **Web Service** → pick the repo → Language **Docker** → Instance type **Free** → **Deploy**.)
+3. Wait for the first build (a few minutes). When it says **Live**, your link appears at the top, e.g.
+   `https://encryption-lab-xxxx.onrender.com`. Share that link with your students.
+
+### Updating the online version
+
+Change files, upload them to GitHub again (or `git push`), and Render redeploys automatically.
+
+### Is students' data private?
+
+Yes. Each browser gets its own private storage folder (a random ID saved in a cookie), so students never
+see each other's keys, files or database rows. Progress ticks and tour settings are stored in each
+student's own browser.
+
+---
+
+## 4. What's inside
 
 ```
 encryption-demo/
@@ -81,9 +135,11 @@ encryption-demo/
 │   ├── Hashing.php                MD5, SHA-1, SHA-256/512, SHA-3, BLAKE2b, HMAC, passwords
 │   ├── Strategies.php             BYOE, cloud, column, E2EE, field, HTTPS, link, network
 │   └── Threats.php                brute force, timing attack, ECB/birthday, backdoor
+├── Dockerfile                   ← used when hosting online (Apache + PHP)
+├── render.yaml                  ← Render settings (free plan)
 ├── cli/run-all.php              ← run every demo in the terminal
 ├── lib/vendor/                  ← bundled phpseclib (only for DES, Blowfish, Twofish)
-└── storage/                     ← created automatically: keys, "cloud" files, SQLite DB
+└── storage/                     ← created automatically: one private folder per student (keys, "cloud" files, SQLite DB)
 ```
 
 ### How the guided lessons work
@@ -122,7 +178,7 @@ Every function in `src/` is commented.
 
 ---
 
-## 4. PHP cheat sheet for JavaScript / TypeScript developers
+## 5. PHP cheat sheet for JavaScript / TypeScript developers
 
 | PHP | JavaScript / TypeScript |
 |---|---|
@@ -171,14 +227,14 @@ Every function in `src/` is commented.
 
 ---
 
-## 5. Notes
+## 6. Notes
 
 **Why is there a `lib/vendor/` folder?** Modern OpenSSL 3 (used by current PHP builds) switches
 off **DES** and **Blowfish** because they're insecure, and PHP has never included **Twofish**.
 So those three use the pure-PHP library [phpseclib](https://phpseclib.com) (MIT license), bundled
 so you don't need Composer. Everything else uses PHP's built-in `openssl`, `sodium` and `hash`.
 
-**Resetting the lab:** stop the server and delete the `storage/` folder. It's recreated on the next page load.
+**Resetting the lab:** stop the server and delete the `storage/` folder. It's recreated on the next page load. Each browser uses its own subfolder, `storage/students/<random id>/`. Folders unused for 2 days are cleaned up automatically.
 
 **Is this production-ready?** `EncryptionEngine` (AES-256-GCM with random IVs) is a correct,
 standard construction. The rest is built to teach: keys sit in plain files, and the Diffie-Hellman
@@ -186,7 +242,7 @@ and ElGamal demos use tiny numbers on purpose. Real systems keep keys in a key-m
 
 ---
 
-## 6. Troubleshooting
+## 7. Troubleshooting
 
 | Problem | Fix |
 |---|---|
@@ -194,5 +250,7 @@ and ElGamal demos use tiny numbers on purpose. Real systems keep keys in a key-m
 | `Address already in use` | Port 8000 is busy. Use another one: `php -S localhost:8080 -t public` |
 | Home page shows **Missing** for an extension | Windows: enable it in `php.ini` (step 1). macOS Homebrew PHP includes them all. |
 | `Could not generate RSA keys` (mostly Windows) | Set the env var `OPENSSL_CONF` to the `openssl.cnf` in your PHP folder (e.g. `C:\php\extras\ssl\openssl.cnf`), then restart the terminal. |
-| `storage/ folder is writable: Missing` | Run the server from a folder you own, or `chmod -R u+w storage` |
-| Timing-attack demo guessed wrong | It measures real time, so a busy laptop adds noise. Just run it again. |
+| `Storage folder is writable: Missing` | Run the server from a folder you own, or `chmod -R u+w storage` |
+| Timing-attack demo guessed wrong | It measures real time, so a busy laptop or server adds noise. Just run it again. |
+| Online link takes ~1 minute to open | The free Render app was asleep. It wakes up on the first visit, so open it before class. |
+| Render build fails | Check that `Dockerfile` is at the top level of the GitHub repo, not inside a sub-folder. |

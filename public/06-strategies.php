@@ -159,11 +159,11 @@ lesson_intro(
 
 <!-- 2 ------------------------------------------------------------------ -->
 <?php step_start(2, 'Cloud storage encryption', 'cloud',
-    'Here the <b>cloud provider</b> manages the key and encrypts files automatically before writing them to disk. Our pretend cloud is the folder <code>storage/cloud/</code>.'); ?>
+    'Here the <b>cloud provider</b> manages the key and encrypts files automatically before writing them to disk. Our pretend cloud is the folder <code>' . h(storage_path('cloud/')) . '</code>.'); ?>
     <?php todo([
         'Press <b>Upload</b>.',
         'In the file list, press <b>Download</b> to compare the raw stored bytes with the decrypted content.',
-        'Optional: open the <code>storage/cloud</code> folder on your computer and open the <code>.enc</code> file in a text editor.',
+        'Optional (when running the lab on your own computer): open that <code>cloud</code> folder and open the <code>.enc</code> file in a text editor.',
     ]); ?>
     <form method="post">
         <input type="hidden" name="action" value="cloud-upload">

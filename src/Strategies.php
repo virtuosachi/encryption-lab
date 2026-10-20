@@ -49,7 +49,7 @@ final class ByoeDemo
 
 /**
  * Files are encrypted BEFORE they are written to the "cloud" folder
- * (storage/cloud/). Open that folder in Finder/VS Code: the files are unreadable.
+ * (storage/.../cloud/). Open that folder in Finder/VS Code: the files are unreadable.
  * Here the PROVIDER manages the key (via KeyManager) — compare with BYOE above.
  */
 final class CloudStorage
@@ -115,7 +115,7 @@ final class CloudStorage
 /* ================================================ 3. Column-level (DB) */
 
 /**
- * A real SQLite database (storage/company.sqlite) with an `employees` table.
+ * A real SQLite database (storage/.../company.sqlite) with an `employees` table.
  * Only the `salary` column is encrypted, and EVERY cell in that column uses
  * the same column key.
  *

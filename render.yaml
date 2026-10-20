@@ -1,0 +1,8 @@
+# render.yaml — tells Render how to host this project (a "Blueprint").
+# With this file in your GitHub repo, Render can set everything up in one click.
+services:
+  - type: web
+    name: encryption-lab
+    runtime: docker        # build using the Dockerfile in this folder
+    plan: free             # Render's free plan: no charges
+    healthCheckPath: /

@@ -10,7 +10,7 @@
  * Keeping keys separate from the engine and the data is the "distributed setup"
  * idea: if one part is stolen, the attacker still lacks the others.
  *
- * Here keys are saved as files in storage/keys/. In real systems they'd live in a
+ * Here keys are saved as files in your storage folder (storage/.../keys/). In real systems they'd live in a
  * dedicated service such as AWS KMS, Azure Key Vault, or a hardware security module (HSM).
  */
 

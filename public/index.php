@@ -17,7 +17,7 @@ $checks = [
     'OpenSSL extension (AES, 3DES, RSA, ECC, certificates)' => extension_loaded('openssl'),
     'Sodium extension (X25519, end-to-end encryption, BLAKE2b)' => extension_loaded('sodium'),
     'PDO SQLite extension (database encryption demo)' => extension_loaded('pdo_sqlite'),
-    'storage/ folder is writable' => is_writable(STORAGE_DIR),
+    'Storage folder is writable' => is_writable(STORAGE_DIR),
 ];
 $allOk = !in_array(false, $checks, true);
 
@@ -72,7 +72,7 @@ page_header('Welcome to the Encryption Lab',
             </tr>
         <?php endforeach; ?>
     </table>
-    <p class="explain">The lab saves keys, a pretend "cloud" folder and a small database inside <code>storage/</code>. Delete that folder any time to start fresh.</p>
+    <p class="explain">The lab saves keys, a pretend "cloud" folder and a small database in your own private folder, <code><?= h(STORAGE_REL) ?></code>. Each browser gets its own folder, so students never see each other's data. Delete the <code>storage</code> folder any time to start fresh.</p>
 </section>
 
 <?php page_footer(); ?>

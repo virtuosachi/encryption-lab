@@ -205,7 +205,7 @@ lesson_intro(
         <button name="action" value="availability-lose" class="danger">Simulate losing the key</button>
         <button name="action" value="availability-backup" class="secondary">Back up the key</button>
     </form>
-    <?php if (isset($out['avail'])): notice('Key backed up to <code>storage/keys/lesson05-backup.key</code>. Now simulate losing the key.', 'success'); endif; ?>
+    <?php if (isset($out['avail'])): notice('Key backed up to <code>' . h(storage_path('keys/lesson05-backup.key')) . '</code>. Now simulate losing the key.', 'success'); endif; ?>
     <?php if (isset($out['lost'])): ?>
         <div class="output">
             <?php notice('The key is gone. The encrypted data can\'t be opened, not even by its owner.', 'error'); ?>

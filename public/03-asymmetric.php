@@ -121,7 +121,7 @@ lesson_intro(
         <div>
             <h3>Public key: safe to share with anyone</h3>
             <pre><?= h($rsa['public'] ?? '') ?></pre>
-            <h3>Private key: never share (saved in storage/keys/rsa-private.pem)</h3>
+            <h3>Private key: never share (saved in <?= h(storage_path('keys/rsa-private.pem')) ?>)</h3>
             <pre><?= h(shorten($rsa['private'] ?? '', 400)) ?></pre>
         </div>
     </details>

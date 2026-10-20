@@ -1,0 +1,3 @@
+# Generated at runtime: keys, encrypted "cloud" files, SQLite database
+storage/
+.DS_Store

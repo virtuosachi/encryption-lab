@@ -1,9 +1,12 @@
 # Encryption Lab — a guided, hands-on PHP demo of encryption and decryption
 
-A step-by-step web lab for beginners. Students follow numbered steps, type their own data,
-press buttons and see real encryption happen, with plain-language explanations of every result.
-No XAMPP, no Apache, no MySQL, no Composer. You only need **PHP 8.1 or newer**: it has its own
-built-in web server.
+A step-by-step web lab about encryption and decryption. You follow numbered steps, type your own
+data, press buttons and watch real encryption happen, with a plain-language explanation of every result.
+
+**Two ways to use it:**
+- **Online:** open the link your instructor shared. Nothing to install.
+- **On your own computer:** follow the steps below. This is the best way to **explore and change the code**.
+  You only need **PHP 8.1 or newer** (no XAMPP, Apache, MySQL or Composer): PHP has its own built-in web server.
 
 ---
 
@@ -54,61 +57,7 @@ This runs every demo from every lesson and prints PASS/FAIL. It's the fastest wa
 
 ---
 
-## 3. Put it online for free (Render)
-
-You can host the lab for free on [Render](https://render.com) so students only need a link.
-The project already includes everything Render needs: `Dockerfile` (runs the lab with the
-Apache web server, so a whole class can use it at once) and `render.yaml` (the settings).
-
-**What "free" means on Render:** no charges and no monthly credit to run out. The trade-offs:
-- After **15 minutes with no visitors**, the app goes to sleep. The next visit wakes it up in about **1 minute**.
-  **Tip:** open the link yourself a couple of minutes before class.
-- Saved data (keys, "cloud" files, database rows) is **wiped** whenever the app sleeps or restarts.
-  That's fine here: every student starts with a fresh lab anyway.
-- 750 free hours per month: enough to keep one app running all month.
-
-### Step A — Put the project on GitHub (one time)
-
-Render deploys straight from a GitHub repository.
-
-1. Create a free account at <https://github.com> and click **New repository**. Name it `encryption-lab`.
-   It can be Public or Private.
-2. Upload the project, using **either** option:
-   - **Easiest (no commands):** on the new repo page, click **uploading an existing file**, then drag in
-     **everything inside** the `encryption-demo` folder (`public`, `src`, `lib`, `cli`, `Dockerfile`, `render.yaml`,
-     `README.md`, `start.sh`). Don't upload the `storage` folder. Click **Commit changes**.
-   - **With git in a terminal**, inside the `encryption-demo` folder:
-     ```bash
-     git init
-     git add .
-     git commit -m "Encryption Lab"
-     git branch -M main
-     git remote add origin https://github.com/YOUR-USERNAME/encryption-lab.git
-     git push -u origin main
-     ```
-
-### Step B — Deploy on Render
-
-1. Sign up at <https://render.com> with your GitHub account (free).
-2. Click **New** → **Blueprint**, choose your `encryption-lab` repository, and click **Apply**.
-   Render reads `render.yaml` and creates a **free** web service called `encryption-lab`.
-   (Alternative: **New** → **Web Service** → pick the repo → Language **Docker** → Instance type **Free** → **Deploy**.)
-3. Wait for the first build (a few minutes). When it says **Live**, your link appears at the top, e.g.
-   `https://encryption-lab-xxxx.onrender.com`. Share that link with your students.
-
-### Updating the online version
-
-Change files, upload them to GitHub again (or `git push`), and Render redeploys automatically.
-
-### Is students' data private?
-
-Yes. Each browser gets its own private storage folder (a random ID saved in a cookie), so students never
-see each other's keys, files or database rows. Progress ticks and tour settings are stored in each
-student's own browser.
-
----
-
-## 4. What's inside
+## 3. What's inside
 
 ```
 encryption-demo/
@@ -135,16 +84,15 @@ encryption-demo/
 │   ├── Hashing.php                MD5, SHA-1, SHA-256/512, SHA-3, BLAKE2b, HMAC, passwords
 │   ├── Strategies.php             BYOE, cloud, column, E2EE, field, HTTPS, link, network
 │   └── Threats.php                brute force, timing attack, ECB/birthday, backdoor
-├── Dockerfile                   ← used when hosting online (Apache + PHP)
-├── render.yaml                  ← Render settings (free plan)
+├── Dockerfile, render.yaml      ← settings for the online version (you can ignore these)
 ├── cli/run-all.php              ← run every demo in the terminal
 ├── lib/vendor/                  ← bundled phpseclib (only for DES, Blowfish, Twofish)
-└── storage/                     ← created automatically: one private folder per student (keys, "cloud" files, SQLite DB)
+└── storage/                     ← created automatically: one private folder per browser (keys, "cloud" files, SQLite DB)
 ```
 
 ### How the guided lessons work
 
-Each lesson page has the same structure, so students always know what to do:
+Each lesson page has the same structure, so you always know what to do:
 
 | Element | What it's for |
 |---|---|
@@ -157,10 +105,9 @@ Each lesson page has the same structure, so students always know what to do:
 | **Remember** | The one-line takeaway |
 | **Check yourself** | Short multiple-choice quiz at the end, checked instantly |
 | "I finished this step" | Progress tick, saved in the browser; the home page shows progress per lesson |
-| **Guided tour** pop-ups | Offered automatically on a student's first visit to each page. Highlights one step at a time with Back / Next / Skip, and points to the explanation as soon as a result appears. Can be minimized, skipped, or turned off ("Don't open tours automatically"). The **Guide me** button (bottom-right) restarts it from the step currently on screen. Keyboard: arrows = Back/Next, Esc = close. |
+| **Guided tour** pop-ups | Offered automatically the first time you open each page. Highlights one step at a time with Back / Next / Skip, and points to the explanation as soon as a result appears. Can be minimized, skipped, or turned off ("Don't open tours automatically"). The **Guide me** button (bottom-right) restarts it from the step currently on screen. Keyboard: arrows = Back/Next, Esc = close. |
 
-For teachers and curious students, each step also names the PHP file that did the work (**See the code**).
-Every function in `src/` is commented.
+Each step also names the PHP file that did the work (**See the code**). Every function in `src/` is commented.
 
 ### Where each topic lives in the code
 
@@ -175,6 +122,29 @@ Every function in `src/` is commented.
 | Brute force, side channel, cryptanalysis, backdoors | 07 | `Threats.php` |
 
 **Resetting progress:** the step ticks live in the browser's local storage. Clear the site data for `localhost:8000` to reset them.
+
+---
+
+## 4. Exploring the code
+
+All the encryption logic lives in **`src/`**. The pages in `public/` only show forms and results.
+A good order to read it in:
+
+1. **`src/EncryptionEngine.php`**: the heart of the lab. Under 100 lines (mostly comments) that encrypt and decrypt with AES-256-GCM.
+   Look for the three parts of encryption: the algorithm, the key, and the encoding.
+2. **`src/KeyManager.php`**: how random keys are made (`random_bytes`), saved and loaded, and how a password becomes a key (PBKDF2).
+3. **`src/SymmetricCiphers.php`**: the same message through AES, DES, 3DES, Blowfish and Twofish. Compare key and block sizes.
+4. **`src/AsymmetricCiphers.php`**: RSA, digital signatures, ECC, and the small-number Diffie-Hellman and ElGamal
+   (`modPow()` is short enough to trace by hand).
+5. **`src/Hashing.php`**: hashes, the avalanche effect (`avalanche()`), HMAC and password hashing.
+6. **`src/Strategies.php`** and **`src/Threats.php`**: real-world uses of encryption, and attacks on weak setups.
+
+**Tips for exploring:**
+- Read a function, then press its button in the lab and compare the code with the result.
+- Run `php cli/run-all.php` to call every function at once and see the outputs in your terminal.
+- Change something and watch what happens. For example: add `'email'` to `FieldLevel::SENSITIVE_FIELDS`
+  in `src/Strategies.php`, change `SideChannel::DELAY_US` in `src/Threats.php`, or try different key sizes.
+  If you break something, download the repository again.
 
 ---
 
@@ -252,5 +222,4 @@ and ElGamal demos use tiny numbers on purpose. Real systems keep keys in a key-m
 | `Could not generate RSA keys` (mostly Windows) | Set the env var `OPENSSL_CONF` to the `openssl.cnf` in your PHP folder (e.g. `C:\php\extras\ssl\openssl.cnf`), then restart the terminal. |
 | `Storage folder is writable: Missing` | Run the server from a folder you own, or `chmod -R u+w storage` |
 | Timing-attack demo guessed wrong | It measures real time, so a busy laptop or server adds noise. Just run it again. |
-| Online link takes ~1 minute to open | The free Render app was asleep. It wakes up on the first visit, so open it before class. |
-| Render build fails | Check that `Dockerfile` is at the top level of the GitHub repo, not inside a sub-folder. |
+| The online link takes about a minute to open | The online version sleeps when nobody has used it for a while. Wait a moment and it will load. |
